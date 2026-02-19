@@ -1,0 +1,37 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.dashboard-card {
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+}
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.btn-primary {
+    border-radius: 8px;
+}
+
+.btn-outline-primary {
+    border-radius: 8px;
+}
+
+form .form-control,
+form .form-select {
+    border-radius: 8px;
+}
+
+.shadow-soft {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}

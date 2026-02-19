@@ -1,0 +1,134 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a class="btn btn-outline-success" href="{{ url_for('admin_students') }}">Students</a>
+<a class="btn btn-outline-warning" href="{{ url_for('admin_drives') }}">Drives</a>
+<a class="btn btn-outline-dark" href="{{ url_for('admin_applications') }}">Applications</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<!-- Header -->
+<div class="card shadow-soft mb-4 p-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-primary">Company Registry</h2>
+            <p class="text-muted">
+                Review company profiles, verify details, and manage approval status.
+            </p>    
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='images/company.png') }}"
+                 class="img-fluid"
+                 style="max-height: 140px;">
+        </div>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="card shadow-soft p-4">
+
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>Company</th>
+            <th>HR Contact</th>
+            <th>Website</th>
+            <th>Drives</th>
+            <th>Status</th>
+            <th>Account</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for company in companies %}
+        <tr>
+
+            <td class="fw-semibold">
+                {{ company.company_name }}
+                <div class="small text-muted">
+                    Registered: {{ company.created_at.strftime('%d %b %Y') }}
+                </div>
+            </td>
+
+            <td>
+                {{ company.hr_contact or "Not Provided" }}
+            </td>
+
+            <td>
+                {% if company.website %}
+                    <a href="{{ company.website }}" target="_blank">
+                        Visit
+                    </a>
+                {% else %}
+                    <span class="text-muted">Not Provided</span>
+                {% endif %}
+            </td>
+
+            <td>
+                <span class="badge bg-secondary">
+                    {{ company.drives|length }}
+                </span>
+            </td>
+
+            <td>
+                {% if company.approval_status == "Approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif company.approval_status == "Pending" %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% else %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if company.user.is_active %}
+                    <span class="badge bg-success">Active</span>
+                {% else %}
+                    <span class="badge bg-dark">Blacklisted</span>
+                {% endif %}
+            </td>
+
+            <td>
+                <div class="d-flex gap-2 flex-wrap">
+
+                    {% if company.approval_status != "Approved" %}
+                    <a class="btn btn-sm btn-outline-success"
+                       href="{{ url_for('approve_company', company_id=company.id) }}">
+                       Approve
+                    </a>
+                    {% endif %}
+
+                    {% if company.approval_status != "Rejected" %}
+                    <a class="btn btn-sm btn-outline-danger"
+                       href="{{ url_for('reject_company', company_id=company.id) }}">
+                       Reject
+                    </a>
+                    {% endif %}
+
+                    {% if company.user.is_active %}
+                        <a class="btn btn-sm btn-outline-danger"
+                            href="{{ url_for('toggle_user', user_id=company.user_id) }}">
+                            Blacklist
+                        </a>
+                    {% else %}
+                        <a class="btn btn-sm btn-outline-success"
+                            href="{{ url_for('toggle_user', user_id=company.user_id) }}">
+                            Reactivate
+                        </a>
+                    {% endif %}
+
+
+                </div>
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

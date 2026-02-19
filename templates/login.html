@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row align-items-center">
+
+    <!-- Left Section -->
+    <div class="col-md-6 text-center">
+        <img src="{{ url_for('static', filename='images/login_registration.png') }}" 
+             class="img-fluid" 
+             style="max-height: 400px;">
+    </div>
+
+    <!-- Right Section -->
+    <div class="col-md-5 offset-md-1">
+        <div class="card shadow-soft p-5">
+            <h2 class="mb-4 fw-bold text-primary">Welcome Back</h2>
+            <p class="text-muted">Login to continue to your dashboard.</p>
+
+            <form method="POST">
+
+                <div class="mb-3">
+                    <input type="text" name="username"
+                        class="form-control form-control-lg"
+                        placeholder="Username" required>
+                </div>
+
+                <div class="mb-4">
+                    <input type="password" name="password"
+                        class="form-control form-control-lg"
+                        placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="text-center mt-4">
+                <a href="{{ url_for('register') }}">Create Account</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

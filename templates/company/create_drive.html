@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Create Placement Drive</h3>
+
+<div class="card p-4 shadow-soft col-md-6">
+<form method="POST">
+
+    <div class="mb-3">
+        <input type="text" name="job_title" class="form-control" placeholder="Job Title" required>
+    </div>
+
+    <div class="mb-3">
+        <textarea name="job_description" class="form-control" placeholder="Job Description" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <textarea name="eligibility" class="form-control" placeholder="Eligibility Criteria"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <input type="text" name="salary" class="form-control" placeholder="Salary">
+    </div>
+
+    <div class="mb-3">
+        <input type="text" name="location" class="form-control" placeholder="Location">
+    </div>
+
+    <div class="mb-3">
+        <input type="date" name="deadline" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Drive</button>
+
+</form>
+</div>
+
+{% endblock %}

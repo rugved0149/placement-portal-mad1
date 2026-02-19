@@ -1,0 +1,70 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary"
+   href="{{ url_for('company_dashboard') }}">
+   Dashboard
+</a>
+
+<a class="btn btn-outline-success"
+   href="{{ url_for('create_drive') }}">
+   Create Drive
+</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="card shadow-soft mb-4 p-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-success">Company Profile</h2>
+            <p class="text-muted">
+                Update organization details visible to students and admin.
+            </p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='images/dashboard.svg') }}"
+                 class="img-fluid"
+                 style="max-height: 150px;">
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-soft p-4 col-md-8">
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Company Name</label>
+        <input type="text"
+               name="company_name"
+               value="{{ company.company_name }}"
+               class="form-control"
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">HR Contact</label>
+        <input type="text"
+               name="hr_contact"
+               value="{{ company.hr_contact }}"
+               class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Website</label>
+        <input type="url"
+               name="website"
+               value="{{ company.website }}"
+               class="form-control">
+    </div>
+
+    <button class="btn btn-success">
+        Save Changes
+    </button>
+
+</form>
+
+</div>
+
+{% endblock %}

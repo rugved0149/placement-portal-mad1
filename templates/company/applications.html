@@ -1,0 +1,118 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary"
+   href="{{ url_for('company_dashboard') }}">
+   Dashboard
+</a>
+
+<a class="btn btn-outline-success"
+   href="{{ url_for('create_drive') }}">
+   Create Drive
+</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<!-- Hero Section -->
+<div class="card shadow-soft mb-4 p-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-success">
+                Applications Review Panel
+            </h2>
+            <p class="text-muted">
+                Reviewing applicants for:
+                <span class="fw-semibold text-dark">
+                    {{ drive.job_title }}
+                </span>
+            </p>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='images/profile.png') }}"
+                 class="img-fluid"
+                 style="max-height: 150px;">
+        </div>
+    </div>
+</div>
+
+<!-- Applications Table -->
+<div class="card shadow-soft p-4">
+
+    <h4 class="mb-3">Applicant List</h4>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>Student ID</th>
+            <th>Status</th>
+            <th>Resume</th>
+            <th>Update Status</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for app in applications %}
+        <tr>
+
+            <td class="fw-semibold">
+                {{ app.student_id }}
+            </td>
+
+            <td>
+                {% if app.status == "Selected" %}
+                    <span class="badge bg-success">Selected</span>
+                {% elif app.status == "Shortlisted" %}
+                    <span class="badge bg-warning text-dark">Shortlisted</span>
+                {% elif app.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% else %}
+                    <span class="badge bg-secondary">Applied</span>
+                {% endif %}
+            </td>
+
+            <td>
+                {% if app.student.resume_path %}
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="{{ url_for('static', filename='uploads/resumes/' + app.student.resume_path) }}"
+                       target="_blank">
+                       View Resume
+                    </a>
+                {% else %}
+                    <span class="text-muted">Not Uploaded</span>
+                {% endif %}
+            </td>
+
+            <td>
+                <form method="POST"
+                      action="{{ url_for('update_application', application_id=app.id) }}"
+                      class="d-flex gap-2">
+
+                    <select name="status"
+                            class="form-select form-select-sm"
+                            style="max-width: 160px;">
+
+                        <option value="Shortlisted">Shortlisted</option>
+                        <option value="Selected">Selected</option>
+                        <option value="Rejected">Rejected</option>
+
+                    </select>
+
+                    <button type="submit"
+                            class="btn btn-sm btn-success">
+                        Save
+                    </button>
+
+                </form>
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

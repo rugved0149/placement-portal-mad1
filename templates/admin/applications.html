@@ -1,0 +1,94 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a class="btn btn-outline-success" href="{{ url_for('admin_companies') }}">Companies</a>
+<a class="btn btn-outline-warning" href="{{ url_for('admin_students') }}">Students</a>
+<a class="btn btn-outline-dark" href="{{ url_for('admin_drives') }}">Drives</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<!-- Header -->
+<div class="card shadow-soft mb-4 p-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-dark">Placement Applications</h2>
+            <p class="text-muted">
+                Monitor all student applications across companies and drives.
+            </p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='images/student_approval.png') }}"
+                 class="img-fluid"
+                 style="max-height: 150px;">
+        </div>
+    </div>
+</div>
+
+<!-- Applications Table -->
+<div class="card shadow-soft p-4">
+
+    <h5 class="mb-3">
+        Total Applications:
+        <span class="badge bg-dark">
+            {{ applications|length }}
+        </span>
+    </h5>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>Student</th>
+            <th>Department</th>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Applied On</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for app in applications %}
+        <tr>
+
+            <td class="fw-semibold">
+                {{ app.student.full_name }}
+            </td>
+
+            <td>
+                {{ app.student.department }}
+            </td>
+
+            <td>
+                {{ app.drive.company.company_name }}
+            </td>
+
+            <td>
+                {{ app.drive.job_title }}
+            </td>
+
+            <td>
+                {{ app.applied_on.strftime('%d %b %Y') }}
+            </td>
+
+            <td>
+                {% if app.status == "Selected" %}
+                    <span class="badge bg-success">Selected</span>
+                {% elif app.status == "Shortlisted" %}
+                    <span class="badge bg-warning text-dark">Shortlisted</span>
+                {% elif app.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% else %}
+                    <span class="badge bg-secondary">Applied</span>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

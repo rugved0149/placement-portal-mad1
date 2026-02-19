@@ -1,0 +1,71 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary" href="{{ url_for('student_dashboard') }}">Dashboard</a>
+<a class="btn btn-outline-success" href="{{ url_for('edit_profile') }}">Edit Profile</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="card shadow-soft mb-4 p-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-primary">Student Profile</h2>
+            <p class="text-muted">
+                Update your academic details and upload your resume.
+            </p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="{{ url_for('static', filename='images/profile.png') }}"
+                 class="img-fluid"
+                 style="max-height: 150px;">
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-soft p-4 col-md-8">
+
+<form method="POST" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="full_name"
+               value="{{ student.full_name }}"
+               class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Contact</label>
+        <input type="text" name="contact"
+               value="{{ student.contact }}"
+               class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Department</label>
+        <input type="text" name="department"
+               value="{{ student.department }}"
+               class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">CGPA</label>
+        <input type="number" step="0.01"
+               name="cgpa"
+               value="{{ student.cgpa }}"
+               class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Upload Resume</label>
+        <input type="file" name="resume"
+               class="form-control">
+    </div>
+
+    <button class="btn btn-primary">Save Changes</button>
+
+</form>
+
+</div>
+
+{% endblock %}

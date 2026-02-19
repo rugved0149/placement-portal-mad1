@@ -1,0 +1,56 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary" href="{{ url_for('admin_companies') }}">Companies</a>
+<a class="btn btn-outline-success" href="{{ url_for('admin_students') }}">Students</a>
+<a class="btn btn-outline-warning" href="{{ url_for('admin_drives') }}">Drives</a>
+<a class="btn btn-outline-dark" href="{{ url_for('admin_applications') }}">Applications</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<!-- Hero Section -->
+<div class="card shadow-soft mb-4 p-4">
+    <div class="row align-items-center">
+        <div class="col-md-7">
+            <h2 class="fw-bold text-primary">Institute Control Panel</h2>
+            <p class="text-muted">
+                Monitor placements, manage companies, track student applications,
+                and oversee recruitment drives efficiently.
+            </p>
+        </div>
+        <div class="col-md-5 text-center">
+            <img src="{{ url_for('static', filename='images/admin_dashboard.png') }}"
+                 class="img-fluid"
+                 style="max-height: 220px;">
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card p-4 shadow-soft dashboard-card text-center">
+            <h6 class="text-muted">Registered Students</h6>
+            <h1 class="fw-bold text-primary">{{ total_students }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4 shadow-soft dashboard-card text-center">
+            <h6 class="text-muted">Registered Companies</h6>
+            <h1 class="fw-bold text-success">{{ total_companies }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4 shadow-soft dashboard-card text-center">
+            <h6 class="text-muted">Total Applications</h6>
+            <h1 class="fw-bold text-danger">{{ total_applications }}</h1>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

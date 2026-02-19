@@ -1,0 +1,59 @@
+{% extends "layout_dashboard.html" %}
+
+{% block sidebar %}
+<a class="btn btn-outline-primary" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a class="btn btn-outline-success" href="{{ url_for('admin_companies') }}">Companies</a>
+<a class="btn btn-outline-warning" href="{{ url_for('admin_students') }}">Students</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="card shadow-soft mb-4 p-4">
+    <h2 class="fw-bold text-warning">Placement Drives</h2>
+</div>
+
+<div class="card shadow-soft p-4">
+
+<table class="table table-hover">
+    <thead class="table-light">
+    <tr>
+        <th>Company ID</th>
+        <th>Job Title</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for drive in drives %}
+    <tr>
+        <td>{{ drive.company_id }}</td>
+        <td>{{ drive.job_title }}</td>
+        <td>
+            {% if drive.status == "Approved" %}
+                <span class="badge bg-success">Approved</span>
+            {% elif drive.status == "Pending" %}
+                <span class="badge bg-warning text-dark">Pending</span>
+            {% else %}
+                <span class="badge bg-danger">Rejected</span>
+            {% endif %}
+        </td>
+        <td>
+            <a class="btn btn-sm btn-outline-success"
+               href="{{ url_for('approve_drive', drive_id=drive.id) }}">
+               Approve
+            </a>
+            <a class="btn btn-sm btn-outline-danger"
+               href="{{ url_for('reject_drive', drive_id=drive.id) }}">
+               Reject
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+</div>
+
+{% endblock %}
