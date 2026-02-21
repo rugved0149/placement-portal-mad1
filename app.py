@@ -13,11 +13,7 @@ app.config.from_object(Config)
 db.init_app(app)
 login_manager.init_app(app)
 
-
-# ======================
 # DATABASE + ADMIN CREATION
-# ======================
-
 with app.app_context():
     if not os.path.exists("instance"):
         os.makedirs("instance")
@@ -38,28 +34,17 @@ with app.app_context():
         db.session.commit()
         print("Default admin created.")
 
-
-# ======================
 # USER LOADER
-# ======================
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
-# ======================
 # ROUTES
-# ======================
-
 @app.route("/")
 def home():
     return redirect(url_for("login"))
 
-
-# ----------------------
 # LOGIN
-# ----------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -97,10 +82,7 @@ def login():
 
     return render_template("login.html")
 
-
-# ----------------------
 # REGISTER
-# ----------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -162,21 +144,14 @@ def register():
 
     return render_template("register.html")
 
-
-# ----------------------
 # LOGOUT
-# ----------------------
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
 
-
-# ======================
 # ADMIN ROUTES
-# ======================
-
 @app.route("/admin/dashboard")
 @login_required
 def admin_dashboard():
@@ -334,10 +309,7 @@ def admin_applications():
     applications = Application.query.all()
     return render_template("admin/applications.html", applications=applications)
 
-# ======================
 # COMPANY ROUTES
-# ======================
-
 @app.route("/company/dashboard")
 @login_required
 def company_dashboard():
@@ -483,10 +455,7 @@ def update_application(application_id):
 
     return redirect(url_for("company_applications", drive_id=drive.id))
 
-# ======================
 # STUDENT ROUTES (Placeholder)
-# ======================
-
 @app.route("/student/apply/<int:drive_id>")
 @login_required
 def apply_drive(drive_id):
@@ -590,10 +559,6 @@ def edit_profile():
         return redirect(url_for("student_dashboard"))
 
     return render_template("student/profile.html", student=student)
-
-# ======================
 # RUN
-# ======================
-
 if __name__ == "__main__":
     app.run(debug=True)

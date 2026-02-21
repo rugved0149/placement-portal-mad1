@@ -2,11 +2,7 @@ from datetime import datetime
 from extensions import db
 from flask_login import UserMixin
 
-
-# ======================
 # USER TABLE
-# ======================
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
@@ -16,11 +12,7 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
-# ======================
 # STUDENT TABLE
-# ======================
-
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -39,11 +31,7 @@ class Student(db.Model):
         cascade="all, delete-orphan"
     )
 
-
-# ======================
 # COMPANY TABLE
-# ======================
-
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -63,11 +51,7 @@ class Company(db.Model):
         cascade="all, delete-orphan"
     )
 
-
-# ======================
 # PLACEMENT DRIVE TABLE
-# ======================
-
 class PlacementDrive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
@@ -91,11 +75,7 @@ class PlacementDrive(db.Model):
         cascade="all, delete-orphan"
     )
 
-
-# ======================
 # APPLICATION TABLE
-# ======================
-
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
@@ -116,3 +96,4 @@ class Application(db.Model):
     __table_args__ = (
         db.UniqueConstraint('student_id', 'drive_id', name='unique_application'),
     )
+    

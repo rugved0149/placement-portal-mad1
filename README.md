@@ -180,4 +180,8 @@ No JavaScript for core logic
 
 Rugved Suryawanshi
 IIT Madras BS Degree Program
-MIT Academy of Engineering
+
+---
+## License
+
+This project is licensed under the MIT License – see the LICENSE file for details.
