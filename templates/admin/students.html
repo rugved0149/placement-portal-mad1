@@ -4,36 +4,93 @@
 <a class="btn btn-outline-primary" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
 <a class="btn btn-outline-success" href="{{ url_for('admin_companies') }}">Companies</a>
 <a class="btn btn-outline-warning" href="{{ url_for('admin_drives') }}">Drives</a>
+<a class="btn btn-outline-dark" href="{{ url_for('admin_applications') }}">Applications</a>
 {% endblock %}
 
 {% block dashboard_content %}
 
 <div class="card shadow-soft mb-4 p-4">
-    <h2 class="fw-bold text-success">Student Records</h2>
-    <p class="text-muted">View and manage all registered students.</p>
+    <h2 class="fw-bold text-success">Student Management</h2>
+    <p class="text-muted">
+        View, monitor and manage student accounts.
+    </p>
 </div>
 
 <div class="card shadow-soft p-4">
 
-<table class="table table-striped table-hover">
+<form method="GET" action="{{ url_for('admin_students') }}" class="mb-4">
+    <div class="input-group">
+        <input type="text"
+               name="query"
+               class="form-control"
+               placeholder="Search by Name, ID, or Contact"
+               value="{{ request.args.get('query', '') }}">
+
+        <button class="btn btn-primary">
+            Search
+        </button>
+
+        <a href="{{ url_for('admin_students') }}"
+           class="btn btn-outline-secondary">
+           Reset
+        </a>
+    </div>
+</form>
+
+<table class="table table-hover align-middle">
     <thead class="table-light">
     <tr>
         <th>Name</th>
         <th>Department</th>
         <th>CGPA</th>
+        <th>Account Status</th>
+        <th>Actions</th>
     </tr>
     </thead>
-    <tbody>
 
+    <tbody>
     {% for student in students %}
     <tr>
-        <td class="fw-semibold">{{ student.full_name }}</td>
-        <td>{{ student.department }}</td>
-        <td>{{ student.cgpa }}</td>
+
+        <td class="fw-semibold">
+            {{ student.full_name }}
+        </td>
+
+        <td>
+            {{ student.department }}
+        </td>
+
+        <td>
+            {{ student.cgpa }}
+        </td>
+
+        <td>
+            {% if student.user.is_active %}
+                <span class="badge bg-success">Active</span>
+            {% else %}
+                <span class="badge bg-dark">Blacklisted</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if student.user.is_active %}
+                <a class="btn btn-sm btn-outline-danger"
+                   href="{{ url_for('toggle_user', user_id=student.user_id) }}">
+                   Blacklist
+                </a>
+            {% else %}
+                <a class="btn btn-sm btn-outline-success"
+                   href="{{ url_for('toggle_user', user_id=student.user_id) }}">
+                   Reactivate
+                </a>
+            {% endif %}
+        </td>
+
     </tr>
     {% endfor %}
 
     </tbody>
+
 </table>
 
 </div>

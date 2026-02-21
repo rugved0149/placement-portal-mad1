@@ -26,6 +26,25 @@
     </div>
 </div>
 
+<form method="GET" action="{{ url_for('admin_companies') }}" class="mb-4">
+    <div class="input-group">
+        <input type="text"
+               name="query"
+               class="form-control"
+               placeholder="Search by Company Name, ID, or HR Contact"
+               value="{{ request.args.get('query', '') }}">
+
+        <button class="btn btn-primary">
+            Search
+        </button>
+
+        <a href="{{ url_for('admin_companies') }}"
+           class="btn btn-outline-secondary">
+           Reset
+        </a>
+    </div>
+</form>
+
 <!-- Table -->
 <div class="card shadow-soft p-4">
 

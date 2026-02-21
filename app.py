@@ -178,14 +178,26 @@ def admin_dashboard():
         total_applications=total_applications
     )
 
-
 @app.route("/admin/students")
 @login_required
 def admin_students():
+
     if current_user.role != "admin":
         return "Unauthorized", 403
 
-    students = Student.query.all()
+    query = request.args.get("query", "")
+
+    if query:
+        students = Student.query.filter(
+            db.or_(
+                Student.full_name.ilike(f"%{query}%"),
+                Student.contact.ilike(f"%{query}%"),
+                Student.id == query if query.isdigit() else False
+            )
+        ).all()
+    else:
+        students = Student.query.all()
+
     return render_template("admin/students.html", students=students)
 
 @app.route("/admin/search_students", methods=["GET", "POST"])
@@ -205,23 +217,22 @@ def search_students():
 @app.route("/admin/companies")
 @login_required
 def admin_companies():
+
     if current_user.role != "admin":
         return "Unauthorized", 403
 
-    companies = Company.query.all()
-    return render_template("admin/companies.html", companies=companies)
+    query = request.args.get("query", "")
 
-@app.route("/admin/search_companies", methods=["GET", "POST"])
-@login_required
-def search_companies():
-    if current_user.role != "admin":
-        return "Unauthorized", 403
-
-    query = request.form.get("query", "")
-
-    companies = Company.query.filter(
-        Company.company_name.contains(query)
-    ).all()
+    if query:
+        companies = Company.query.filter(
+            db.or_(
+                Company.company_name.ilike(f"%{query}%"),
+                Company.hr_contact.ilike(f"%{query}%"),
+                Company.id == query if query.isdigit() else False
+            )
+        ).all()
+    else:
+        companies = Company.query.all()
 
     return render_template("admin/companies.html", companies=companies)
 
@@ -334,18 +345,28 @@ def company_dashboard():
 @app.route("/company/create_drive", methods=["GET", "POST"])
 @login_required
 def create_drive():
-    if company.approval_status != "Approved":
-        return "Unauthorized", 403
 
+    # 1️⃣ Blacklist enforcement
     if not current_user.is_active:
         logout_user()
         return redirect(url_for("login"))
 
+    # 2️⃣ Role enforcement
     if current_user.role != "company":
         return "Unauthorized", 403
 
+    # 3️⃣ Fetch company FIRST
     company = Company.query.filter_by(user_id=current_user.id).first()
 
+    if not company:
+        return "Unauthorized", 403
+
+    # 4️⃣ Approval enforcement AFTER fetching company
+    if company.approval_status != "Approved":
+        flash("Company not approved by admin.")
+        return redirect(url_for("company_dashboard"))
+
+    # 5️⃣ Handle form submission
     if request.method == "POST":
         new_drive = PlacementDrive(
             company_id=company.id,
@@ -369,14 +390,23 @@ def create_drive():
 
     return render_template("company/create_drive.html")
 
-
 @app.route("/company/close_drive/<int:drive_id>")
 @login_required
 def close_drive(drive_id):
+
+    if not current_user.is_active:
+        logout_user()
+        return redirect(url_for("login"))
+
     if current_user.role != "company":
         return "Unauthorized", 403
 
+    company = Company.query.filter_by(user_id=current_user.id).first()
     drive = PlacementDrive.query.get_or_404(drive_id)
+
+    if drive.company_id != company.id:
+        return "Unauthorized", 403
+
     drive.status = "Closed"
     db.session.commit()
 
@@ -459,6 +489,12 @@ def update_application(application_id):
 @app.route("/student/apply/<int:drive_id>")
 @login_required
 def apply_drive(drive_id):
+
+    # Blacklist enforcement 
+    if not current_user.is_active:
+        logout_user()
+        return redirect(url_for("login"))
+    
     if current_user.role != "student":
         return "Unauthorized", 403
 
@@ -536,6 +572,11 @@ def student_dashboard():
 @app.route("/student/profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
+
+    if not current_user.is_active:
+        logout_user()
+        return redirect(url_for("login"))
+    
     if current_user.role != "student":
         return "Unauthorized", 403
 
